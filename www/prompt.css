@@ -1,0 +1,20 @@
+#prompt{
+right:10px;
+position:absolute;
+bottom:10px;
+text-align:left;
+
+width: 30%;
+
+font-size:18px;
+color:blue;
+
+border-bottom-left-radius: 5px 5px;
+border-bottom-right-radius: 5px 5px;
+border-top-left-radius: 5px 5px;
+border-top-right-radius: 5px 5px;
+}
+
+.warning{
+color:red;
+}

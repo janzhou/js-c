@@ -1,0 +1,56 @@
+#chat-input, #script-input{
+width:100%;
+}
+
+#script-input, #chat-messages{
+height:450px;
+overflow:auto;
+}
+
+.chart{
+height:300px;
+width:476px;
+float:left;
+}
+
+#tabs{
+overflow:hidden;
+}
+
+#footer{
+width:100%;
+margin:30px;
+text-align:center;
+overflow:hidden;
+}
+
+.machineinfo{
+padding: 10px;
+float:left;
+}
+
+.machine{
+overflow:hidden;
+}
+
+.disks{
+font-size: 12px;
+}
+
+.disks{
+clear:both;
+}
+
+body{
+font-size:13px;
+}
+
+#desktop{
+margin:0 auto;
+width:1000px;
+}
+
+#test{
+width:100%;
+height:450px;
+}

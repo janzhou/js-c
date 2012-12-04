@@ -1,0 +1,487 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>固态盘测试系统 Alpha 0.1 版</title>
+<link rel="stylesheet" href="jquery/ui/themes/smoothness/jquery.ui.all.css">
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="prompt.css">
+
+<script type="text/javascript" src="jquery/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="jquery/ui/js/minified/jquery.ui.core.min.js"></script>
+<script type="text/javascript" src="jquery/ui/js/minified/jquery.ui.widget.min.js"></script>
+<script type="text/javascript" src="jquery/ui/js/minified/jquery.ui.tabs.min.js"></script>
+
+<script type="text/javascript" src="jquery/jqplot/jquery.jqplot.min.js"></script>
+<link class="include" rel="stylesheet" type="text/css" href="jquery/jqplot/jquery.jqplot.min.css" />
+
+<script type="text/javascript" src="functions.js"></script>
+
+<script type="text/javascript" src="sync.js"></script>
+<script type="text/javascript" src="chat.js"></script>
+<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript" src="results.js"></script>
+
+<script type="text/javascript" src="prompt.js"></script>
+
+</head>
+
+<body>
+<div id="desktop">
+	<div id = "header"><h1>固态盘测试系统 Alpha 0.1 版</h1></div>
+	<div id = "tabs">
+		<ul>
+			<li><a href="#home">Home</a></li>
+			<li><a href="#machines">Machines</a></li>
+			<li><a href="#tests">Tests</a></li>
+			<li><a href="#results">Results</a></li>
+			<li><a href="#text-results">Text Results</a></li>
+			<li><a href="#script">Script</a></li>
+			<li><a href="#chat">Chat</a></li>
+			<li><a href="#about">About</a></li>
+		</ul>
+		<div id="home">
+		<p>固态盘测试系统 Alpha 0.1 版</p>
+		<p>为了获得较好的效果，建议使用现代一点的浏览器。本网页在Firefox 14，Chrome 21和IE9下测试正常，但是不保证在IE 6下能正常使用。</p>
+		<p>Machines用于显示当前测试机的状态。Results部分用于对测试结果画图。</p>
+		<p>但是由于C语言中对文本解析还有问题（功能不全+代码极不稳定），所以数据还不能push到网页上来。</p>
+		<p>为了能够在网页看到结果，把收到的原始数据直接送到Text Results。暂时先用这个看吧。</p>
+		<p>一旦文本解析做好，Machines和Results就可以看到数据了。</p>
+		<p>Tests是打算用一个界面来配置测试的。没做好。暂时用Script直接发送数据。</p>
+		<p>当前程序的框架做好了，可以用最基本的Text Results和Script进行操作。功能和显示效果可以在当前框架下继续完善。</p>
+		<p>后面可能会有的任务：1. 把功能做全（这个应该是个体力活）；2. 增强程序健壮性（清扫BUG的过程。主要是对异常输入的处理和对多线程的管理）；3. 权限（在php中做权限管理应该容易点，部分命令只许特定身份的人使用）。</p>
+		<p>这个版本可能问题比较多，用各种不合法的输入来测程序的健壮性就不用了，肯定会崩，在正常使用的情况下发现问题请联系。</p>
+		</div>
+		<div id="machines">
+			<p>我已经习惯从零开始数数了。难道第一个数不应该是零吗？</p>
+			<p>因为对收到的脚本处理的不正确，这个部分暂时只是个摆设。</p>
+			<div class="machine" id="machine-0">
+				<div class="machineinfo" id="machine-0-ip">255.255.255.255:9527</div>
+				<div class="machineinfo" id="machine-0-status">inactive</div>
+				<div class="disks">
+					<table border="1">
+						<tr>
+							<th>Disk 0</th>
+							<th>Disk 1</th>
+							<th>Disk 2</th>
+							<th>Disk 3</th>
+							<th>Disk 4</th>
+							<th>Disk 5</th>
+							<th>Disk 6</th>
+							<th>Disk 7</th>
+							<th>Disk 8</th>
+							<th>Disk 9</th>
+							<th>Disk 10</th>
+							<th>Disk 11</th>
+							<th>Disk 12</th>
+							<th>Disk 13</th>
+							<th>Disk 14</th>
+							<th>Disk 15</th>
+						</tr>
+						<tr>
+							<th id="disk-0-0">inactive</th>
+							<th id="disk-0-1">inactive</th>
+							<th id="disk-0-2">inactive</th>
+							<th id="disk-0-3">inactive</th>
+							<th id="disk-0-4">inactive</th>
+							<th id="disk-0-5">inactive</th>
+							<th id="disk-0-6">inactive</th>
+							<th id="disk-0-7">inactive</th>
+							<th id="disk-0-8">inactive</th>
+							<th id="disk-0-9">inactive</th>
+							<th id="disk-0-10">inactive</th>
+							<th id="disk-0-11">inactive</th>
+							<th id="disk-0-12">inactive</th>
+							<th id="disk-0-13">inactive</th>
+							<th id="disk-0-14">inactive</th>
+							<th id="disk-0-15">inactive</th>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="machine" id="machine-1">
+				<div class="machineinfo" id="machine-1-ip">255.255.255.255:9527</div>
+				<div class="machineinfo" id="machine-1-status">inactive</div>
+				<div class="disks">
+					<table border="1">
+						<tr>
+							<th>Disk 0</th>
+							<th>Disk 1</th>
+							<th>Disk 2</th>
+							<th>Disk 3</th>
+							<th>Disk 4</th>
+							<th>Disk 5</th>
+							<th>Disk 6</th>
+							<th>Disk 7</th>
+							<th>Disk 8</th>
+							<th>Disk 9</th>
+							<th>Disk 10</th>
+							<th>Disk 11</th>
+							<th>Disk 12</th>
+							<th>Disk 13</th>
+							<th>Disk 14</th>
+							<th>Disk 15</th>
+						</tr>
+						<tr>
+							<th id="disk-1-0">inactive</th>
+							<th id="disk-1-1">inactive</th>
+							<th id="disk-1-2">inactive</th>
+							<th id="disk-1-3">inactive</th>
+							<th id="disk-1-4">inactive</th>
+							<th id="disk-1-5">inactive</th>
+							<th id="disk-1-6">inactive</th>
+							<th id="disk-1-7">inactive</th>
+							<th id="disk-1-8">inactive</th>
+							<th id="disk-1-9">inactive</th>
+							<th id="disk-1-10">inactive</th>
+							<th id="disk-1-11">inactive</th>
+							<th id="disk-1-12">inactive</th>
+							<th id="disk-1-13">inactive</th>
+							<th id="disk-1-14">inactive</th>
+							<th id="disk-1-15">inactive</th>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="machine" id="machine-2">
+				<div class="machineinfo" id="machine-2-ip">255.255.255.255:9527</div>
+				<div class="machineinfo" id="machine-2-status">inactive</div>
+				<div class="disks">
+					<table border="1">
+						<tr>
+							<th>Disk 0</th>
+							<th>Disk 1</th>
+							<th>Disk 2</th>
+							<th>Disk 3</th>
+							<th>Disk 4</th>
+							<th>Disk 5</th>
+							<th>Disk 6</th>
+							<th>Disk 7</th>
+							<th>Disk 8</th>
+							<th>Disk 9</th>
+							<th>Disk 10</th>
+							<th>Disk 11</th>
+							<th>Disk 12</th>
+							<th>Disk 13</th>
+							<th>Disk 14</th>
+							<th>Disk 15</th>
+						</tr>
+						<tr>
+							<th id="disk-2-0">inactive</th>
+							<th id="disk-2-1">inactive</th>
+							<th id="disk-2-2">inactive</th>
+							<th id="disk-2-3">inactive</th>
+							<th id="disk-2-4">inactive</th>
+							<th id="disk-2-5">inactive</th>
+							<th id="disk-2-6">inactive</th>
+							<th id="disk-2-7">inactive</th>
+							<th id="disk-2-8">inactive</th>
+							<th id="disk-2-9">inactive</th>
+							<th id="disk-2-10">inactive</th>
+							<th id="disk-2-11">inactive</th>
+							<th id="disk-2-12">inactive</th>
+							<th id="disk-2-13">inactive</th>
+							<th id="disk-2-14">inactive</th>
+							<th id="disk-2-15">inactive</th>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="machine" id="machine-3">
+				<div class="machineinfo" id="machine-3-ip">255.255.255.255:9527</div>
+				<div class="machineinfo" id="machine-3-status">inactive</div>
+				<div class="disks">
+					<table border="1">
+						<tr>
+							<th>Disk 0</th>
+							<th>Disk 1</th>
+							<th>Disk 2</th>
+							<th>Disk 3</th>
+							<th>Disk 4</th>
+							<th>Disk 5</th>
+							<th>Disk 6</th>
+							<th>Disk 7</th>
+							<th>Disk 8</th>
+							<th>Disk 9</th>
+							<th>Disk 10</th>
+							<th>Disk 11</th>
+							<th>Disk 12</th>
+							<th>Disk 13</th>
+							<th>Disk 14</th>
+							<th>Disk 15</th>
+						</tr>
+						<tr>
+							<th id="disk-3-0">inactive</th>
+							<th id="disk-3-1">inactive</th>
+							<th id="disk-3-2">inactive</th>
+							<th id="disk-3-3">inactive</th>
+							<th id="disk-3-4">inactive</th>
+							<th id="disk-3-5">inactive</th>
+							<th id="disk-3-6">inactive</th>
+							<th id="disk-3-7">inactive</th>
+							<th id="disk-3-8">inactive</th>
+							<th id="disk-3-9">inactive</th>
+							<th id="disk-3-10">inactive</th>
+							<th id="disk-3-11">inactive</th>
+							<th id="disk-3-12">inactive</th>
+							<th id="disk-3-13">inactive</th>
+							<th id="disk-3-14">inactive</th>
+							<th id="disk-3-15">inactive</th>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="machine" id="machine-4">
+				<div class="machineinfo" id="machine-4-ip">255.255.255.255:9527</div>
+				<div class="machineinfo" id="machine-4-status">inactive</div>
+				<div class="disks">
+					<table border="1">
+						<tr>
+							<th>Disk 0</th>
+							<th>Disk 1</th>
+							<th>Disk 2</th>
+							<th>Disk 3</th>
+							<th>Disk 4</th>
+							<th>Disk 5</th>
+							<th>Disk 6</th>
+							<th>Disk 7</th>
+							<th>Disk 8</th>
+							<th>Disk 9</th>
+							<th>Disk 10</th>
+							<th>Disk 11</th>
+							<th>Disk 12</th>
+							<th>Disk 13</th>
+							<th>Disk 14</th>
+							<th>Disk 15</th>
+						</tr>
+						<tr>
+							<th id="disk-4-0">inactive</th>
+							<th id="disk-4-1">inactive</th>
+							<th id="disk-4-2">inactive</th>
+							<th id="disk-4-3">inactive</th>
+							<th id="disk-4-4">inactive</th>
+							<th id="disk-4-5">inactive</th>
+							<th id="disk-4-6">inactive</th>
+							<th id="disk-4-7">inactive</th>
+							<th id="disk-4-8">inactive</th>
+							<th id="disk-4-9">inactive</th>
+							<th id="disk-4-10">inactive</th>
+							<th id="disk-4-11">inactive</th>
+							<th id="disk-4-12">inactive</th>
+							<th id="disk-4-13">inactive</th>
+							<th id="disk-4-14">inactive</th>
+							<th id="disk-4-15">inactive</th>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="machine" id="machine-5">
+				<div class="machineinfo" id="machine-5-ip">255.255.255.255:9527</div>
+				<div class="machineinfo" id="machine-5-status">inactive</div>
+				<div class="disks">
+					<table border="1">
+						<tr>
+							<th>Disk 0</th>
+							<th>Disk 1</th>
+							<th>Disk 2</th>
+							<th>Disk 3</th>
+							<th>Disk 4</th>
+							<th>Disk 5</th>
+							<th>Disk 6</th>
+							<th>Disk 7</th>
+							<th>Disk 8</th>
+							<th>Disk 9</th>
+							<th>Disk 10</th>
+							<th>Disk 11</th>
+							<th>Disk 12</th>
+							<th>Disk 13</th>
+							<th>Disk 14</th>
+							<th>Disk 15</th>
+						</tr>
+						<tr>
+							<th id="disk-5-0">inactive</th>
+							<th id="disk-5-1">inactive</th>
+							<th id="disk-5-2">inactive</th>
+							<th id="disk-5-3">inactive</th>
+							<th id="disk-5-4">inactive</th>
+							<th id="disk-5-5">inactive</th>
+							<th id="disk-5-6">inactive</th>
+							<th id="disk-5-7">inactive</th>
+							<th id="disk-5-8">inactive</th>
+							<th id="disk-5-9">inactive</th>
+							<th id="disk-5-10">inactive</th>
+							<th id="disk-5-11">inactive</th>
+							<th id="disk-5-12">inactive</th>
+							<th id="disk-5-13">inactive</th>
+							<th id="disk-5-14">inactive</th>
+							<th id="disk-5-15">inactive</th>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="machine" id="machine-6">
+				<div class="machineinfo" id="machine-6-ip">255.255.255.255:9527</div>
+				<div class="machineinfo" id="machine-6-status">inactive</div>
+				<div class="disks">
+					<table border="1">
+						<tr>
+							<th>Disk 0</th>
+							<th>Disk 1</th>
+							<th>Disk 2</th>
+							<th>Disk 3</th>
+							<th>Disk 4</th>
+							<th>Disk 5</th>
+							<th>Disk 6</th>
+							<th>Disk 7</th>
+							<th>Disk 8</th>
+							<th>Disk 9</th>
+							<th>Disk 10</th>
+							<th>Disk 11</th>
+							<th>Disk 12</th>
+							<th>Disk 13</th>
+							<th>Disk 14</th>
+							<th>Disk 15</th>
+						</tr>
+						<tr>
+							<th id="disk-6-0">inactive</th>
+							<th id="disk-6-1">inactive</th>
+							<th id="disk-6-2">inactive</th>
+							<th id="disk-6-3">inactive</th>
+							<th id="disk-6-4">inactive</th>
+							<th id="disk-6-5">inactive</th>
+							<th id="disk-6-6">inactive</th>
+							<th id="disk-6-7">inactive</th>
+							<th id="disk-6-8">inactive</th>
+							<th id="disk-6-9">inactive</th>
+							<th id="disk-6-10">inactive</th>
+							<th id="disk-6-11">inactive</th>
+							<th id="disk-6-12">inactive</th>
+							<th id="disk-6-13">inactive</th>
+							<th id="disk-6-14">inactive</th>
+							<th id="disk-6-15">inactive</th>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="machine" id="machine-7">
+				<div class="machineinfo" id="machine-7-ip">255.255.255.255:9527</div>
+				<div class="machineinfo" id="machine-7-status">inactive</div>
+				<div class="disks">
+					<table border="1">
+						<tr>
+							<th>Disk 0</th>
+							<th>Disk 1</th>
+							<th>Disk 2</th>
+							<th>Disk 3</th>
+							<th>Disk 4</th>
+							<th>Disk 5</th>
+							<th>Disk 6</th>
+							<th>Disk 7</th>
+							<th>Disk 8</th>
+							<th>Disk 9</th>
+							<th>Disk 10</th>
+							<th>Disk 11</th>
+							<th>Disk 12</th>
+							<th>Disk 13</th>
+							<th>Disk 14</th>
+							<th>Disk 15</th>
+						</tr>
+						<tr>
+							<th id="disk-7-0">inactive</th>
+							<th id="disk-7-1">inactive</th>
+							<th id="disk-7-2">inactive</th>
+							<th id="disk-7-3">inactive</th>
+							<th id="disk-7-4">inactive</th>
+							<th id="disk-7-5">inactive</th>
+							<th id="disk-7-6">inactive</th>
+							<th id="disk-7-7">inactive</th>
+							<th id="disk-7-8">inactive</th>
+							<th id="disk-7-9">inactive</th>
+							<th id="disk-7-10">inactive</th>
+							<th id="disk-7-11">inactive</th>
+							<th id="disk-7-12">inactive</th>
+							<th id="disk-7-13">inactive</th>
+							<th id="disk-7-14">inactive</th>
+							<th id="disk-7-15">inactive</th>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div id="tests">
+			<p>理想的情况当然是可以通过网页来配置测试，但是现在还是先用script部分的功能直接发送脚本吧。。。</p>
+			<p>
+				Iometer: <input type="radio" checked="checked" name="test" value="iometer" />
+				Bit: <input type="radio" name="test" value="bit" />
+			</p>
+			<div id="test"></div>
+		</div>
+		<div id="results">
+			<p>这里是最吃CPU的地方。先就这样吧，以后再优化。</p>
+			<p>
+				<input type="submit"  value="Start Draw" id="result-start" />
+				<input type="submit"  value="Stop Draw" id="result-stop" />
+			</p>
+			<div id="chart-0" class="chart"></div>
+			<div id="chart-1" class="chart"></div>
+			<div id="chart-2" class="chart"></div>
+			<div id="chart-3" class="chart"></div>
+			<div id="chart-4" class="chart"></div>
+			<div id="chart-5" class="chart"></div>
+			<div id="chart-6" class="chart"></div>
+			<div id="chart-7" class="chart"></div>
+		</div>
+		<div id="text-results">
+			<p>收到的脚本将全部显示在这里。</p>
+			<ol id="text-results-content">
+			</ol>
+		</div>
+		<div id="script">
+			<p>用这个发送脚本。</p>
+			<p>
+			IP: <input type="text"  value="127.0.0.1" id="script-ip" />
+			Port: <input type="text"  value="6000" id="script-port" />
+			</p>
+			<textarea id="script-input">script</textarea>
+			<input type="submit"  value="Submit" id="script-submit" />
+			<input type="submit"  value="TCP Send" id="script-tcp" />
+			<input type="submit"  value="UDP Send" id="script-udp" />
+			<input type="submit"  value="Broadcast" id="script-broadcast" />
+			<p>Submit将这里的脚本发送到每一个测试机上。</p>
+			<p>TCP Send使用TCP将这里的脚本发送到目标IP和端口上。</p>
+			<p>UDP Send使用UDP将这里的脚本发送到目标IP和端口上。</p>
+			<p>Broadcast使用UDP将这里的脚本广播到目标端口上。</p>
+		</div>
+		<div id="chat">
+			<p>简单的聊天功能。娱乐性质，不必在意。</p>
+			<textarea id="chat-input"></textarea>
+			<div id="chat-messages"></div>
+		</div>
+		<div id="about">
+		<p>固态盘测试系统 Alpha 0.1 版</p>
+		<p></p>
+		<p>Change Log：</p>
+		<ul>
+			<li>8月25日
+				<ol>
+					<li>第一个原型 - 原型中的原型 - 大概应该可能可以用了。</li>
+				</ol>
+			</li>
+		</ul>
+		<p>作者：</p>
+		<ul>
+			<li>吴非 wufei [at] hust.edu.cn</li>
+			<li>周健 zhoujian [at] tiaozhanshu.net</li>
+			<li>李想 270497518 [at] qq.com</li>
+			<li>崔庆丹 1054241504 [at] qq.com</li>
+		</ul>
+		</div>
+	</div>
+	<div id = "footer">Copyright &copy; 2012 周健</div>
+</div>
+</body>
+</html>
+
