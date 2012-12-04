@@ -75,6 +75,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\cmd.h" />
+    <ClInclude Include="..\src\convert.h" />
     <ClInclude Include="..\src\global.h" />
     <ClInclude Include="..\src\platform.h" />
     <ClInclude Include="..\src\sem.h" />
@@ -86,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\cmd.c" />
+    <ClCompile Include="..\src\convert.c" />
     <ClCompile Include="..\src\main.c" />
     <ClCompile Include="..\src\sem.c" />
     <ClCompile Include="..\src\server.c" />

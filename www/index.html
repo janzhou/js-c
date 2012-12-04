@@ -4,7 +4,7 @@
 <head profile="http://gmpg.org/xfn/11">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>固态盘测试系统 Alpha 0.5 版</title>
+<title>固态盘测试系统 Alpha 0.6 版</title>
 <link rel="stylesheet" href="jquery/ui/themes/smoothness/jquery.ui.all.css">
 
 <link rel="stylesheet" href="style.css">
@@ -31,7 +31,7 @@
 
 <body>
 <div id="desktop">
-	<div id = "header"><h1>固态盘测试系统 Alpha 0.5 版</h1></div>
+	<div id = "header"><h1>固态盘测试系统 Alpha 0.6 版</h1></div>
 	<div id = "tabs">
 		<ul>
 			<li><a href="#home">Home</a></li>
@@ -44,7 +44,7 @@
 			<li><a href="#about">About</a></li>
 		</ul>
 		<div id="home" class="tab">
-		<h2>固态盘测试系统 Alpha 0.5 版</h2>
+		<h2>固态盘测试系统 Alpha 0.6 版</h2>
 		<p>为了获得较好的效果，建议使用现代一点的浏览器。本网页在Firefox 14，Chrome 21和IE9下测试正常，但是不保证在IE 6下能正常使用。</p>
 		<p>Machines用于显示当前测试机的状态。Results部分用于对测试结果画图。</p>
 		<p>但是由于C语言中对文本解析还有问题（功能不全+代码极不稳定），所以部分数据还不能push到网页上来。</p>
@@ -497,6 +497,12 @@
 		<p>正式版谨慎更新，开发版随意。</p>
 		<h3>Change Log：</h3>
 		<ul>
+			<li>8月28日 Alpha 0.6 版
+				<ol>
+					<li>转义字符比想像的复杂。继续加强了转义，在C语言中新建了转义字符模块。用转义绕过了url中24个字符，绕过了html中9个字符。涵盖了大部分情况，但是可能还是不能处理全部情况。</li>
+					<li>潜在的缓冲区溢出问题越来越突出。</li>
+				</ol>
+			</li>
 			<li>8月27日 Alpha 0.5 版
 				<ol>
 					<li>加强了文本至网页的转义，排除了一些bug。</li>

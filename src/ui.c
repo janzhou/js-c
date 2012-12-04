@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "ui.h"
 #include "server.h"
+#include "convert.h"
 
 void printmachine(char * buf, struct machine_t * machine){
 	int i = 0;
@@ -29,67 +30,13 @@ void printresult(char * buf, struct result_t * result){
 	}
 }
 
+
+
 void printtextresult(char * buf, char * text){
 	int i = 0;
-	sprintf(buf, "{\"type\":\"textresult\",\"text\":\"");
-	i = strlen(buf);
-	while(*text){
-		switch(*text){
-			case '\r':
-			case '\n':
-				*(buf+i++) = '<';
-				*(buf+i++) = 'b';
-				*(buf+i++) = 'r';
-				*(buf+i++) = '/';
-				*(buf+i++) = '>';
-				break;
-			case '\"':
-				*(buf+i++) = '&';
-				*(buf+i++) = 'q';
-				*(buf+i++) = 'u';
-				*(buf+i++) = 'o';
-				*(buf+i++) = 't';
-				*(buf+i++) = ';';
-				break;
-			case '\'':
-				*(buf+i++) = '&';
-				*(buf+i++) = 'a';
-				*(buf+i++) = 'p';
-				*(buf+i++) = 'o';
-				*(buf+i++) = 's';
-				*(buf+i++) = ';';
-				break;
-			case '&':
-				*(buf+i++) = '&';
-				*(buf+i++) = 'a';
-				*(buf+i++) = 'm';
-				*(buf+i++) = 'p';
-				*(buf+i++) = ';';
-				break;
-			case '<':
-				*(buf+i++) = '&';
-				*(buf+i++) = 'l';
-				*(buf+i++) = 't';
-				*(buf+i++) = ';';
-				break;
-			case '>':
-				*(buf+i++) = '&';
-				*(buf+i++) = 'g';
-				*(buf+i++) = 't';
-				*(buf+i++) = ';';
-				break;
-			case '\t':
-				*(buf+i++) = ' ';
-				break;
-			case ' ':
-				while(*(text+1) == ' ') text++;
-			default:
-				*(buf+i++) = *text;
-				break;
-		}
-		text++;
-	}
-	sprintf(buf+i, "\"}");
+	char convertbuf[800];
+	stringtohtml(text, convertbuf, sizeof(convertbuf));
+	sprintf(buf, "{\"type\":\"textresult\",\"text\":\"%s\"}", convertbuf);
 }
 
 void uiinit(void)

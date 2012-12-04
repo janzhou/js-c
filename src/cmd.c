@@ -7,6 +7,9 @@
 #include "tcp.h"
 #include "user.h"
 #include "ui.h"
+
+#include "convert.h"
+
 #define JSON	0
 #define PRINT	1
 
@@ -18,15 +21,16 @@ typedef struct cmd_line{
 static void v(int argc, char *argv[], char * output, int format)
 {
 	int mainversion = 0;
-	int subversion = 5;
+	int subversion = 6;
+	int develop = 0;
 
 	switch(format)
 	{
 		case JSON:
-			sprintf(output, "\"v\":%d.%d" , mainversion, subversion);
+			sprintf(output, "\"v\":%d.%d.%d" , mainversion, subversion);
 			break;
 		case PRINT:
-			sprintf(output, "version: %d.%d\n" , mainversion, subversion);
+			sprintf(output, "version: %d.%d.%d\n" , mainversion, subversion, develop);
 			break;
 	}
 }
@@ -263,9 +267,13 @@ static void cmdsend(int argc, char *argv[], char * output, int format)
 static void chat(int argc, char *argv[], char * output, int format)
 {
 	char msg[1024];
+	char convertbuf[1024];
 
 	if(argc == 1) sprintf(msg, "\"void msg\"");
-	else sprintf(msg, "{\"type\":\"chat\",\"msg\":\"%s\"}" , argv[1]);
+	else {
+		stringtohtml(argv[1], convertbuf, sizeof(convertbuf));
+		sprintf(msg, "{\"type\":\"chat\",\"msg\":\"%s\"}" , convertbuf);
+	}
 	
 	sendmsg(msg);
 
@@ -273,7 +281,7 @@ static void chat(int argc, char *argv[], char * output, int format)
 	{
 		case JSON:
 			if(argc == 1) sprintf(output, "\"void msg\"");
-			else sprintf(output, "\"%s\"" , argv[1]);
+			else sprintf(output, "\"%s\"" , convertbuf);
 			break;
 		case PRINT:
 			if(argc == 1) sprintf(output, "void msg");
@@ -317,6 +325,13 @@ static struct cmd_line cmd_list[] = {
 //============                 命令入口，php和stdin入口封装完备，不用再看              ============
 //=================================================================================================
 //=================================================================================================
+
+//	\n	\r
+//	n	r
+//	[	]	{	}	;	:	'	"	,	<		>	/	?
+//	o	p	O	P	k	K	l	L	b	B		N	m	M
+//	`~@#%^&=
+//	qQ235678
 static int devide(char * cmd, char *argv[], int len)
 {
 	int i = 0;
@@ -327,7 +342,7 @@ static int devide(char * cmd, char *argv[], int len)
 		while(*cmd == 32 && *cmd != 0) cmd++;
 		argv[i] = pre = cmd;
 		while(*cmd != 32 && *cmd != 0) {
-			if(';' == *cmd){
+			if('!' == *cmd){
 				cmd++;
 				switch(*cmd){
 					case 'n':
@@ -336,13 +351,78 @@ static int devide(char * cmd, char *argv[], int len)
 					case 'r':
 						*pre = '\r';
 						break;
+					case 'o':
+						*pre = '[';
+						break;
+					case 'p':
+						*pre = ']';
+						break;
+					case 'O':
+						*pre = '{';
+						break;
+					case 'P':
+						*pre = '}';
+						break;
+					case 'k':
+						*pre = ';';
+						break;
+					case 'K':
+						*pre = ':';
+						break;
+					case 'l':
+						*pre = '\'';
+						break;
+					case 'L':
+						*pre = '"';
+						break;
+					case 'b':
+						*pre = ',';
+						break;
+					case 'B':
+						*pre = '<';
+						break;
+					case 'N':
+						*pre = '>';
+						break;
+					case 'm':
+						*pre = '/';
+						break;
+					case 'M':
+						*pre = '?';
+						break;
+					case 'q':
+						*pre = '`';
+						break;
+					case 'Q':
+						*pre = '~';
+						break;
+					case '2':
+						*pre = '@';
+						break;
+					case '3':
+						*pre = '#';
+						break;
+					case '5':
+						*pre = '%';
+						break;
+					case '6':
+						*pre = '^';
+						break;
+					case '7':
+						*pre = '&';
+						break;
+					case '8':
+						*pre = '=';
+						break;
+					case '*':
+						*pre = '+';
+						break;
 					default:
 						*pre = *cmd;
 				}
 			}else *pre = *cmd;
 			cmd++;
 			pre++;
-		
 		}
 		if(cmd > pre) *pre = 0;
 
