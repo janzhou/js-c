@@ -8,9 +8,8 @@ overflow:auto;
 }
 
 .chart{
-height:300px;
-width:476px;
-float:left;
+height:400px;
+width:100%;
 }
 
 #tabs{

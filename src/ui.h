@@ -3,15 +3,10 @@
 
 struct disk_t{
 	int status;
-	int port;
-	char disk_store[32];
-	char Units[16];
-	char Sector_size[16];
-	char iosize[16];
-	char disk_identifer[12];
-	char model_number[16];
-	char serial_number[12];
-	char fie_rev[10];
+	int capacty;
+	char model_number[32];
+	char serial_number[32];
+	char firmware_revision[32];
 };
 
 struct machine_t{
@@ -21,6 +16,17 @@ struct machine_t{
 	int status;
 	char machine[16];
 	struct disk_t disks[16];
+};
+
+#define IOMETER 0
+#define BIT 1
+
+struct result_t{
+	int type;
+	int machine;
+	int disk;
+	double progress;
+	double iops;
 };
 
 struct machine_t machines[8];

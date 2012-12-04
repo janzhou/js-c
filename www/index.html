@@ -4,7 +4,7 @@
 <head profile="http://gmpg.org/xfn/11">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>固态盘测试系统 Alpha 0.1 版</title>
+<title>固态盘测试系统 Alpha 0.2 版</title>
 <link rel="stylesheet" href="jquery/ui/themes/smoothness/jquery.ui.all.css">
 
 <link rel="stylesheet" href="style.css">
@@ -31,7 +31,7 @@
 
 <body>
 <div id="desktop">
-	<div id = "header"><h1>固态盘测试系统 Alpha 0.1 版</h1></div>
+	<div id = "header"><h1>固态盘测试系统 Alpha 0.2 版</h1></div>
 	<div id = "tabs">
 		<ul>
 			<li><a href="#home">Home</a></li>
@@ -44,11 +44,11 @@
 			<li><a href="#about">About</a></li>
 		</ul>
 		<div id="home">
-		<p>固态盘测试系统 Alpha 0.1 版</p>
+		<p>固态盘测试系统 Alpha 0.2 版</p>
 		<p>为了获得较好的效果，建议使用现代一点的浏览器。本网页在Firefox 14，Chrome 21和IE9下测试正常，但是不保证在IE 6下能正常使用。</p>
 		<p>Machines用于显示当前测试机的状态。Results部分用于对测试结果画图。</p>
-		<p>但是由于C语言中对文本解析还有问题（功能不全+代码极不稳定），所以数据还不能push到网页上来。</p>
-		<p>为了能够在网页看到结果，把收到的原始数据直接送到Text Results。暂时先用这个看吧。</p>
+		<p>但是由于C语言中对文本解析还有问题（功能不全+代码极不稳定），所以部分数据还不能push到网页上来。</p>
+		<p>为了能够在网页看到结果，把收到的原始数据直接送到Text Results。</p>
 		<p>一旦文本解析做好，Machines和Results就可以看到数据了。</p>
 		<p>Tests是打算用一个界面来配置测试的。没做好。暂时用Script直接发送数据。</p>
 		<p>当前程序的框架做好了，可以用最基本的Text Results和Script进行操作。功能和显示效果可以在当前框架下继续完善。</p>
@@ -57,7 +57,6 @@
 		</div>
 		<div id="machines">
 			<p>我已经习惯从零开始数数了。难道第一个数不应该是零吗？</p>
-			<p>因为对收到的脚本处理的不正确，这个部分暂时只是个摆设。</p>
 			<div class="machine" id="machine-0">
 				<div class="machineinfo" id="machine-0-ip">255.255.255.255:9527</div>
 				<div class="machineinfo" id="machine-0-status">inactive</div>
@@ -420,19 +419,39 @@
 			<div id="test"></div>
 		</div>
 		<div id="results">
-			<p>这里是最吃CPU的地方。先就这样吧，以后再优化。</p>
 			<p>
+				<select name="machine" id="draw-machine">
+					<option value="0">Machine 0</option>
+					<option value="1">Machine 1</option>
+					<option value="2">Machine 2</option>
+					<option value="3">Machine 3</option>
+					<option value="4">Machine 4</option>
+					<option value="5">Machine 5</option>
+					<option value="6">Machine 6</option>
+					<option value="7">Machine 7</option>
+				</select>
+				<select name="disk" id="draw-disk">
+					<option value="0">Disk 0</option>
+					<option value="1">Disk 1</option>
+					<option value="2">Disk 2</option>
+					<option value="3">Disk 3</option>
+					<option value="4">Disk 4</option>
+					<option value="5">Disk 5</option>
+					<option value="6">Disk 6</option>
+					<option value="7">Disk 7</option>
+					<option value="7">Disk 8</option>
+					<option value="8">Disk 9</option>
+					<option value="10">Disk 10</option>
+					<option value="11">Disk 11</option>
+					<option value="12">Disk 12</option>
+					<option value="13">Disk 13</option>
+					<option value="14">Disk 14</option>
+					<option value="15">Disk 15</option>
+				</select>
 				<input type="submit"  value="Start Draw" id="result-start" />
 				<input type="submit"  value="Stop Draw" id="result-stop" />
 			</p>
-			<div id="chart-0" class="chart"></div>
-			<div id="chart-1" class="chart"></div>
-			<div id="chart-2" class="chart"></div>
-			<div id="chart-3" class="chart"></div>
-			<div id="chart-4" class="chart"></div>
-			<div id="chart-5" class="chart"></div>
-			<div id="chart-6" class="chart"></div>
-			<div id="chart-7" class="chart"></div>
+			<div id="chart" class="chart"></div>
 		</div>
 		<div id="text-results">
 			<p>收到的脚本将全部显示在这里。</p>
@@ -461,11 +480,22 @@
 			<div id="chat-messages"></div>
 		</div>
 		<div id="about">
-		<p>固态盘测试系统 Alpha 0.1 版</p>
-		<p></p>
+		<p>固态盘测试系统 Alpha 0.2 版</p>
+		<p>关于版本号。以0.2版为例，0为大版本号，2为小版本号。</p>
+		<p>大版本号为奇数，则为正式版，只做BUG修复，不增加新功能也不调整API或者程序架构。大版本号为偶数，则为开发版，会增加新功能或者有API或者程序架构上的变化。</p>
+		<p>每个小版本号都做为一个可以使用的程序备份，需要记录更新日志。每个小版本都要可用。</p>
+		<p>调试过程中，以第三级版本号更新，不做保留，不强制记录更新日志。</p>
+		<p>比如，以0.1版为基础进行开发，则可保存为0.1.1，待功能完整，合并入主版本时，则版本号更新为0.2，并记录更新日志。</p>
+		<p>正式版谨慎更新，开发版随意。</p>
 		<p>Change Log：</p>
 		<ul>
-			<li>8月25日
+			<li>8月25日 Alpha 0.2 版
+				<ol>
+					<li>第二个原型 - 增加了部分Machines和Results解析。有那么点图形界面可以显示了。</li>
+					<li>等待在线调试。</li>
+				</ol>
+			</li>
+			<li>8月25日 Alpha 0.1 版
 				<ol>
 					<li>第一个原型 - 原型中的原型 - 大概应该可能可以用了。</li>
 				</ol>

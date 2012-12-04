@@ -14,19 +14,36 @@ function sync(){
 					$('#machine-'+json.msg.id+'-ip').empty();
 					$('#machine-'+json.msg.id+'-ip').append(json.msg.ip+':'+json.msg.port);
 					$('#machine-'+json.msg.id+'-status').empty();
-					if(json.msg.status == 0) status = 'inactive';
-					else status = 'active';
-					$('#machine-'+json.msg.id+'-status').append(status);
+					if(json.msg.status == 0){
+						$('#machine-'+json.msg.id+'-status').append('inactive');
+						$('#machine-'+json.msg.id+'-status').css("color", "black");
+					}else {
+						$('#machine-'+json.msg.id+'-status').append('active');
+						$('#machine-'+json.msg.id+'-status').css("color", "red");
+					}
 					
 					for(var i=0; i < 16 ; i++){
 						$('#disk-'+json.msg.id+'-'+i).empty();
-						if(json.msg.disks[i].status == 0) status = 'inactive';
-						else status = 'active';
-						$('#disk-'+json.msg.id+'-'+i).append(status);
+						if(json.msg.disks[i].status == 0){
+							$('#disk-'+json.msg.id+'-'+i).append('inactive');
+							$('#disk-'+json.msg.id+'-'+i).css("color", "black");
+						}else {
+							$('#disk-'+json.msg.id+'-'+i).append('active');
+							$('#disk-'+json.msg.id+'-'+i).css("color", "red");
+						}
 					}
 					
 				}else if(json.msg.type == "textresult"){
 					$('#text-results-content').append('<li>'+json.msg.text+'</li>');
+				}else if(json.msg.type == "result"){
+					prompt("result");
+					if(json.msg.test == "iometer"){
+						prompt(json.msg.iops);
+						prompt(results[json.msg.machine][json.msg.disk][0]);
+						results[json.msg.machine][json.msg.disk][0].shift();
+						results[json.msg.machine][json.msg.disk][0].push(json.msg.iops);
+						prompt(results[json.msg.machine][json.msg.disk][0]);
+					}
 				}else if(json.msg.type == "chat"){
 					$('#chat-messages').prepend('<li>'+json.msg.msg+'</li>');
 				}else{
