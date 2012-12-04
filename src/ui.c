@@ -14,7 +14,6 @@ void printmachine(char * buf, struct machine_t * machine){
 	sprintf(buf+strlen(buf), "]}");
 }
 
-
 void printresult(char * buf, struct result_t * result){
 	int i = 0;
 	switch(result->type){
@@ -39,9 +38,9 @@ void printtextresult(char * buf, char * text){
 			case '\r':
 			case '\n':
 				*(buf+i++) = '<';
-				*(buf+i++) = '/';
 				*(buf+i++) = 'b';
 				*(buf+i++) = 'r';
+				*(buf+i++) = '/';
 				*(buf+i++) = '>';
 				break;
 			case '\"':
@@ -52,6 +51,38 @@ void printtextresult(char * buf, char * text){
 				*(buf+i++) = 't';
 				*(buf+i++) = ';';
 				break;
+			case '\'':
+				*(buf+i++) = '&';
+				*(buf+i++) = 'a';
+				*(buf+i++) = 'p';
+				*(buf+i++) = 'o';
+				*(buf+i++) = 's';
+				*(buf+i++) = ';';
+				break;
+			case '&':
+				*(buf+i++) = '&';
+				*(buf+i++) = 'a';
+				*(buf+i++) = 'm';
+				*(buf+i++) = 'p';
+				*(buf+i++) = ';';
+				break;
+			case '<':
+				*(buf+i++) = '&';
+				*(buf+i++) = 'l';
+				*(buf+i++) = 't';
+				*(buf+i++) = ';';
+				break;
+			case '>':
+				*(buf+i++) = '&';
+				*(buf+i++) = 'g';
+				*(buf+i++) = 't';
+				*(buf+i++) = ';';
+				break;
+			case '\t':
+				*(buf+i++) = ' ';
+				break;
+			case ' ':
+				while(*(text+1) == ' ') text++;
 			default:
 				*(buf+i++) = *text;
 				break;
@@ -209,9 +240,7 @@ void do_ui(char * ip, int port, int sock_id, int event, void * buf, int len, voi
 				}else{//machine inactive »Á∫Œ≈–∂œ?
 				//	machines[machine].status = 0;
 				}
-				
 			}
-
 			break;
 		case TCP_DISCONNECT:
 			break;

@@ -10,16 +10,26 @@
 #define JSON	0
 #define PRINT	1
 
-//=================================================================================================
-//=================================================================================================
-//========================                 ³ÌÐòÈ«²¿ÃüÁî              ==============================
-//=================================================================================================
-//=================================================================================================
-
 typedef struct cmd_line{
 	char cmd[32];
 	void (* function)(int argc, char *argv[], char * output, int format);
 }cmd_line_t;
+
+static void v(int argc, char *argv[], char * output, int format)
+{
+	int mainversion = 0;
+	int subversion = 5;
+
+	switch(format)
+	{
+		case JSON:
+			sprintf(output, "\"v\":%d.%d" , mainversion, subversion);
+			break;
+		case PRINT:
+			sprintf(output, "version: %d.%d\n" , mainversion, subversion);
+			break;
+	}
+}
 
 //u ip port filename
 static void udpsend(int argc, char *argv[], char * output, int format)
@@ -66,7 +76,6 @@ static void tcpsend(int argc, char *argv[], char * output, int format)
 	if(server_send(argv[1], atoi(argv[2]), buf, size, TCP_SEND)){
 		printf("tcp send error\n");
 	}
-
 
 	fclose(file);
 
@@ -176,6 +185,7 @@ static void webbroadcast(int argc, char *argv[], char * output, int format)
 		}
 		return;
 	}
+	
 	server_broadcast(atoi(argv[1]), argv[2], strlen(argv[2]));
 
 	switch(format)
@@ -288,22 +298,6 @@ static void cmdgetmsg(int argc, char *argv[], char * output, int format)
 	free(msg);
 }
 
-static void v(int argc, char *argv[], char * output, int format)
-{
-	int mainversion = 0;
-	int subversion = 4;
-
-	switch(format)
-	{
-		case JSON:
-			sprintf(output, "\"v\":%d.%d" , mainversion, subversion);
-			break;
-		case PRINT:
-			sprintf(output, "version: %d.%d\n" , mainversion, subversion);
-			break;
-	}
-}
-
 static struct cmd_line cmd_list[] = {
 	{"g", cmdgetmsg},
 	{"c", chat},
@@ -333,8 +327,19 @@ static int devide(char * cmd, char *argv[], int len)
 		while(*cmd == 32 && *cmd != 0) cmd++;
 		argv[i] = pre = cmd;
 		while(*cmd != 32 && *cmd != 0) {
-			if(';' == *cmd) cmd++;
-			if(cmd > pre) *pre = *cmd;
+			if(';' == *cmd){
+				cmd++;
+				switch(*cmd){
+					case 'n':
+						*pre = '\n';
+						break;
+					case 'r':
+						*pre = '\r';
+						break;
+					default:
+						*pre = *cmd;
+				}
+			}else *pre = *cmd;
 			cmd++;
 			pre++;
 		

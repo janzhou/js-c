@@ -19,6 +19,8 @@ function do_cmd(cmd, callbackfunction){
 function text_replace(text){
 	text = text.replace(/;/ig, ';;');
 	text = text.replace(/ /ig, '; ');
+	text = text.replace(/\n/ig, ';n');
+	text = text.replace(/\r/ig, ';r');
 	return text;
 }
 
