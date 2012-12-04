@@ -39,6 +39,9 @@
     <ClInclude Include="..\src\user.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\sem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\cmd.c">
@@ -60,6 +63,9 @@
       <Filter>资源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\src\user.c">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sem.c">
       <Filter>资源文件</Filter>
     </ClCompile>
   </ItemGroup>

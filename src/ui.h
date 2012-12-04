@@ -3,7 +3,7 @@
 
 struct disk_t{
 	int status;
-	int capacty;
+	float capacty;
 	char model_number[32];
 	char serial_number[32];
 	char firmware_revision[32];
@@ -20,13 +20,26 @@ struct machine_t{
 
 #define IOMETER 0
 #define BIT 1
+#define IOMeter_Result 2
 
 struct result_t{
 	int type;
 	int machine;
 	int disk;
+	
 	double progress;
+	
 	double iops;
+	
+	double maxio;
+	double minio;
+	double avgio;
+
+	double readspeed;
+	double writespeed;
+	double readiops;
+	double writeiops;
+	double errcnt;
 };
 
 struct machine_t machines[8];

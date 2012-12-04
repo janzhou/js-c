@@ -4,7 +4,7 @@
 <head profile="http://gmpg.org/xfn/11">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>固态盘测试系统 Alpha 0.2 版</title>
+<title>固态盘测试系统 Alpha 0.3 版</title>
 <link rel="stylesheet" href="jquery/ui/themes/smoothness/jquery.ui.all.css">
 
 <link rel="stylesheet" href="style.css">
@@ -31,7 +31,7 @@
 
 <body>
 <div id="desktop">
-	<div id = "header"><h1>固态盘测试系统 Alpha 0.2 版</h1></div>
+	<div id = "header"><h1>固态盘测试系统 Alpha 0.3 版</h1></div>
 	<div id = "tabs">
 		<ul>
 			<li><a href="#home">Home</a></li>
@@ -43,8 +43,8 @@
 			<li><a href="#chat">Chat</a></li>
 			<li><a href="#about">About</a></li>
 		</ul>
-		<div id="home">
-		<p>固态盘测试系统 Alpha 0.2 版</p>
+		<div id="home" class="tab">
+		<h2>固态盘测试系统 Alpha 0.3 版</h2>
 		<p>为了获得较好的效果，建议使用现代一点的浏览器。本网页在Firefox 14，Chrome 21和IE9下测试正常，但是不保证在IE 6下能正常使用。</p>
 		<p>Machines用于显示当前测试机的状态。Results部分用于对测试结果画图。</p>
 		<p>但是由于C语言中对文本解析还有问题（功能不全+代码极不稳定），所以部分数据还不能push到网页上来。</p>
@@ -55,7 +55,7 @@
 		<p>后面可能会有的任务：1. 把功能做全（这个应该是个体力活）；2. 增强程序健壮性（清扫BUG的过程。主要是对异常输入的处理和对多线程的管理）；3. 权限（在php中做权限管理应该容易点，部分命令只许特定身份的人使用）。</p>
 		<p>这个版本可能问题比较多，用各种不合法的输入来测程序的健壮性就不用了，肯定会崩，在正常使用的情况下发现问题请联系。</p>
 		</div>
-		<div id="machines">
+		<div id="machines" class="tab">
 			<p>我已经习惯从零开始数数了。难道第一个数不应该是零吗？</p>
 			<div class="machine" id="machine-0">
 				<div class="machineinfo" id="machine-0-ip">255.255.255.255:9527</div>
@@ -410,7 +410,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="tests">
+		<div id="tests" class="tab">
 			<p>理想的情况当然是可以通过网页来配置测试，但是现在还是先用script部分的功能直接发送脚本吧。。。</p>
 			<p>
 				Iometer: <input type="radio" checked="checked" name="test" value="iometer" />
@@ -418,7 +418,7 @@
 			</p>
 			<div id="test"></div>
 		</div>
-		<div id="results">
+		<div id="results" class="tab">
 			<p>
 				<select name="machine" id="draw-machine">
 					<option value="0">Machine 0</option>
@@ -439,7 +439,7 @@
 					<option value="5">Disk 5</option>
 					<option value="6">Disk 6</option>
 					<option value="7">Disk 7</option>
-					<option value="7">Disk 8</option>
+					<option value="8">Disk 8</option>
 					<option value="8">Disk 9</option>
 					<option value="10">Disk 10</option>
 					<option value="11">Disk 11</option>
@@ -448,17 +448,24 @@
 					<option value="14">Disk 14</option>
 					<option value="15">Disk 15</option>
 				</select>
+				<select name="result" id="draw-result">
+					<option value="iops">Iometer IOPS</option>
+					<option value="readspeed">BIT Readspeed</option>
+					<option value="writespeed">BIT Writespeed</option>
+					<option value="readiops">BIT Readiops</option>
+					<option value="writeiops">BIT Writeiops</option>
+				</select>
 				<input type="submit"  value="Start Draw" id="result-start" />
 				<input type="submit"  value="Stop Draw" id="result-stop" />
 			</p>
 			<div id="chart" class="chart"></div>
 		</div>
-		<div id="text-results">
+		<div id="text-results" class="tab">
 			<p>收到的脚本将全部显示在这里。</p>
 			<ol id="text-results-content">
 			</ol>
 		</div>
-		<div id="script">
+		<div id="script" class="tab">
 			<p>用这个发送脚本。</p>
 			<p>
 			IP: <input type="text"  value="127.0.0.1" id="script-ip" />
@@ -474,25 +481,31 @@
 			<p>UDP Send使用UDP将这里的脚本发送到目标IP和端口上。</p>
 			<p>Broadcast使用UDP将这里的脚本广播到目标端口上。</p>
 		</div>
-		<div id="chat">
+		<div id="chat" class="tab">
 			<p>简单的聊天功能。娱乐性质，不必在意。</p>
 			<textarea id="chat-input"></textarea>
 			<div id="chat-messages"></div>
 		</div>
-		<div id="about">
-		<p>固态盘测试系统 Alpha 0.2 版</p>
-		<p>关于版本号。以0.2版为例，0为大版本号，2为小版本号。</p>
+		<div id="about" class="tab">
+		<h2>固态盘测试系统 说明</h2>
+		<h3>关于版本号</h3>
+		<p>以0.2版为例，0为大版本号，2为小版本号。</p>
 		<p>大版本号为奇数，则为正式版，只做BUG修复，不增加新功能也不调整API或者程序架构。大版本号为偶数，则为开发版，会增加新功能或者有API或者程序架构上的变化。</p>
 		<p>每个小版本号都做为一个可以使用的程序备份，需要记录更新日志。每个小版本都要可用。</p>
 		<p>调试过程中，以第三级版本号更新，不做保留，不强制记录更新日志。</p>
 		<p>比如，以0.1版为基础进行开发，则可保存为0.1.1，待功能完整，合并入主版本时，则版本号更新为0.2，并记录更新日志。</p>
 		<p>正式版谨慎更新，开发版随意。</p>
-		<p>Change Log：</p>
+		<h3>Change Log：</h3>
 		<ul>
+			<li>8月26日 Alpha 0.3 版
+				<ol>
+					<li>增加了信号量，线程安全了（虽然这个BUG从来没发生过）。</li>
+					<li>C语言中解析了iometer，iometerresult和bit信息。identify，smart和internal_parameters的数据为乱码，处理不了。</li>
+				</ol>
+			</li>
 			<li>8月25日 Alpha 0.2 版
 				<ol>
 					<li>第二个原型 - 增加了部分Machines和Results解析。有那么点图形界面可以显示了。</li>
-					<li>等待在线调试。</li>
 				</ol>
 			</li>
 			<li>8月25日 Alpha 0.1 版
@@ -501,7 +514,7 @@
 				</ol>
 			</li>
 		</ul>
-		<p>作者：</p>
+		<h3>作者：</h3>
 		<ul>
 			<li>吴非 wufei [at] hust.edu.cn</li>
 			<li>周健 zhoujian [at] tiaozhanshu.net</li>
@@ -510,7 +523,7 @@
 		</ul>
 		</div>
 	</div>
-	<div id = "footer">Copyright &copy; 2012 周健</div>
+	<div id = "footer">Copyright &copy; 2012</div>
 </div>
 </body>
 </html>

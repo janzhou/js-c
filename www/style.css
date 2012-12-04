@@ -1,8 +1,21 @@
+body{
+font-size:13px;
+}
+
+#desktop{
+margin:0 auto;
+width:1000px;
+}
+
+.tab{
+min-height:800px;
+}
+
 #chat-input, #script-input{
 width:100%;
 }
 
-#script-input, #chat-messages{
+#script-input{
 height:450px;
 overflow:auto;
 }
@@ -12,20 +25,13 @@ height:400px;
 width:100%;
 }
 
-#tabs{
-overflow:hidden;
-}
-
-#footer{
-width:100%;
-margin:30px;
-text-align:center;
-overflow:hidden;
-}
-
 .machineinfo{
 padding: 10px;
 float:left;
+}
+
+.machine table{
+width:100%;
 }
 
 .machine{
@@ -40,16 +46,9 @@ font-size: 12px;
 clear:both;
 }
 
-body{
-font-size:13px;
-}
-
-#desktop{
-margin:0 auto;
-width:1000px;
-}
-
-#test{
+#footer{
 width:100%;
-height:450px;
+margin:30px;
+text-align:center;
+overflow:hidden;
 }

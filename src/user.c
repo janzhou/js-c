@@ -3,6 +3,9 @@
 
 #include "user.h"
 #include "ui.h"
+#include "sem.h"
+
+void * usersem;
 
 struct buffer_t{
 	char msg[1024];
@@ -22,14 +25,18 @@ static struct user_t * userhead = NULL;
 
 void userinit(void)
 {
+	usersem = create_sem(1, 1);
 	return;
 }
 
 void sendmsg(char * msg)
 {
-	struct user_t * user = userhead;
+	struct user_t * user;
 	struct buffer_t * buffer;
 
+	p(usersem);
+
+	user = userhead;
 	while(user != NULL){
 		buffer = (struct buffer_t *)malloc(sizeof(struct buffer_t));
 		sprintf(buffer->msg, "{\"type\":\"msg\",\"msg\":%s}", msg);
@@ -49,10 +56,11 @@ void sendmsg(char * msg)
 		}
 		user = user->next;
 	}
+	v(usersem);
 }
 
 char * getmsg(int user_id){
-	struct user_t * user = userhead;
+	struct user_t * user;
 	struct buffer_t * buffer;
 
 	int i;
@@ -60,6 +68,8 @@ char * getmsg(int user_id){
 
 	static int global = 1;
 
+	p(usersem);
+	user = userhead;
 	while(user != NULL){
 		if(user->id == user_id){
 			break;
@@ -102,7 +112,7 @@ char * getmsg(int user_id){
 				user->buffer = buffer->next;
 			}
 		}
-
+		v(usersem);
 		buffer = (struct buffer_t *)malloc(sizeof(struct buffer_t));
 		sprintf(buffer->msg, "{\"type\":\"new\",\"id\":%d}", user->id);
 
@@ -126,16 +136,21 @@ char * getmsg(int user_id){
 			user->buffer = buffer->next;
 		}
 	}
+	v(usersem);
 	return buffer->msg;   
 
 } 
 
 void userheartbeat(void){
 
-	struct user_t * user = userhead;
+	struct user_t * user;
 	struct user_t * pre;
 	struct buffer_t * buffer;
 	struct buffer_t * buffer_next;
+	
+	p(usersem);
+
+	user = userhead;
 	
 	while(user != NULL){
 		user->flag++;
@@ -171,4 +186,6 @@ void userheartbeat(void){
 
 		if(user == userhead) break;
 	}
+
+	v(usersem);
 }

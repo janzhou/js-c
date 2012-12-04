@@ -260,6 +260,22 @@ static void cmdgetmsg(int argc, char *argv[], char * output, int format)
 	free(msg);
 }
 
+static void v(int argc, char *argv[], char * output, int format)
+{
+	int mainversion = 0;
+	int subversion = 3;
+
+	switch(format)
+	{
+		case JSON:
+			sprintf(output, "\"v\":%d.%d" , mainversion, subversion);
+			break;
+		case PRINT:
+			sprintf(output, "version: %d.%d\n" , mainversion, subversion);
+			break;
+	}
+}
+
 static struct cmd_line cmd_list[] = {
 	{"g", cmdgetmsg},
 	{"c", chat},
@@ -271,6 +287,7 @@ static struct cmd_line cmd_list[] = {
 	{"wt", wt},
 	{"wu", wu},
 	{"b", broadcast},
+	{"v", v},
 	{"example", example}
 };
 

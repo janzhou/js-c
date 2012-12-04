@@ -26,4 +26,4 @@ $(document).ready(function(){
 	$( "#tabs" ).tabs();
 });
 
-interval = 2000;
+interval = 1000;
