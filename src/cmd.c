@@ -21,24 +21,6 @@ typedef struct cmd_line{
 	void (* function)(int argc, char *argv[], char * output, int format);
 }cmd_line_t;
 
-static void example(int argc, char *argv[], char * output, int format)
-{
-	int i;
-
-	if(argc <= 1) i = 0;
-	else i = atoi(argv[1]);
-
-	switch(format)
-	{
-		case JSON:
-			sprintf(output,"{\"success\":1,\"msg\":\"example %d\"}", i);
-			break;
-		case PRINT:
-			sprintf(output,"example %d\n", i);
-			break;
-	}
-}
-
 //u ip port filename
 static void udpsend(int argc, char *argv[], char * output, int format)
 {
@@ -60,6 +42,7 @@ static void udpsend(int argc, char *argv[], char * output, int format)
 	switch(format)
 	{
 		case JSON:
+			sprintf(output,"{\"type\":\"cmd\",\"success\":1,\"msg\":\"success\"}");
 			break;
 		case PRINT:
 			break;
@@ -90,7 +73,7 @@ static void tcpsend(int argc, char *argv[], char * output, int format)
 	switch(format)
 	{
 		case JSON:
-			sprintf(output, "{\"success\":1,\"msg\":\"tcp send\"}");
+			sprintf(output,"{\"type\":\"cmd\",\"success\":1,\"msg\":\"success\"}");
 			break;
 		case PRINT:
 			break;
@@ -115,6 +98,7 @@ static void broadcast(int argc, char *argv[], char * output, int format)
 	switch(format)
 	{
 		case JSON:
+			sprintf(output,"{\"type\":\"cmd\",\"success\":1,\"msg\":\"success\"}");
 			break;
 		case PRINT:
 			break;
@@ -122,49 +106,85 @@ static void broadcast(int argc, char *argv[], char * output, int format)
 }
 
 //wu ip port msg
-static void wu(int argc, char *argv[], char * output, int format)
+static void webudpsend(int argc, char *argv[], char * output, int format)
 {
+	if(argc < 4){
+		switch(format)
+		{
+			case JSON:
+				sprintf(output,"{\"type\":\"cmd\",\"success\":0,\"msg\":\"no enough args\"}");
+				break;
+			case PRINT:
+				sprintf(output, "no enough args\n");
+				break;
+		}
+		return;
+	}
 	server_send(argv[1], atoi(argv[2]), argv[3], strlen(argv[3]), UDP_SEND);
 
 	switch(format)
 	{
 		case JSON:
-			sprintf(output, "\"success\"");
+			sprintf(output,"{\"type\":\"cmd\",\"success\":1,\"msg\":\"success\"}");
 			break;
 		case PRINT:
-			sprintf(output, "success");
+			sprintf(output, "success\n");
 			break;
 	}
 }
 
 //wt ip port filename
-static void wt(int argc, char *argv[], char * output, int format)
+static void webtcpsend(int argc, char *argv[], char * output, int format)
 {
+	if(argc < 4){
+		switch(format)
+		{
+			case JSON:
+				sprintf(output,"{\"type\":\"cmd\",\"success\":0,\"msg\":\"no enough args\"}");
+				break;
+			case PRINT:
+				sprintf(output, "no enough args\n");
+				break;
+		}
+		return;
+	}
 	server_send(argv[1], atoi(argv[2]), argv[3], strlen(argv[3]), TCP_SEND);
 
 	switch(format)
 	{
 		case JSON:
-			sprintf(output, "\"success\"");
+			sprintf(output,"{\"type\":\"cmd\",\"success\":1,\"msg\":\"success\"}");
 			break;
 		case PRINT:
-			sprintf(output, "success");
+			sprintf(output, "success\n");
 			break;
 	}
 }
 
 //wb port file
-static void wb(int argc, char *argv[], char * output, int format)
+static void webbroadcast(int argc, char *argv[], char * output, int format)
 {
+	if(argc < 3){
+		switch(format)
+		{
+			case JSON:
+				sprintf(output,"{\"type\":\"cmd\",\"success\":0,\"msg\":\"no enough args\"}");
+				break;
+			case PRINT:
+				sprintf(output, "no enough args\n");
+				break;
+		}
+		return;
+	}
 	server_broadcast(atoi(argv[1]), argv[2], strlen(argv[2]));
 
 	switch(format)
 	{
 		case JSON:
-			sprintf(output, "\"success\"");
+			sprintf(output,"{\"type\":\"cmd\",\"success\":1,\"msg\":\"success\"}");
 			break;
 		case PRINT:
-			sprintf(output, "success");
+			sprintf(output, "success\n");
 			break;
 	}
 }
@@ -175,8 +195,18 @@ static void scriptsend(int argc, char *argv[], char * output, int format)
 	char msg[1024];
 	int i;
 
-	if(argc == 1) sprintf(msg, "\"void msg\"");
-	else sprintf(msg, "\"%s\"" , argv[1]);
+	if(argc < 2){
+		switch(format)
+		{
+			case JSON:
+				sprintf(output,"{\"type\":\"cmd\",\"success\":0,\"msg\":\"no enough args\"}");
+				break;
+			case PRINT:
+				sprintf(output, "no enough args\n");
+				break;
+		}
+		return;
+	}
 
 	for(i=0;i<8;i++){
 		if(machines[i].status!=0) server_send(machines[i].ip,machines[i].port,argv[1],strlen(argv[1]),TCP_SEND);
@@ -185,12 +215,10 @@ static void scriptsend(int argc, char *argv[], char * output, int format)
 	switch(format)
 	{
 		case JSON:
-			if(argc == 1) sprintf(output, "\"void msg\"");
-			else sprintf(output, "\"%s\"" , argv[1]);
+			sprintf(output,"{\"type\":\"cmd\",\"success\":1,\"msg\":\"success\"}");
 			break;
 		case PRINT:
-			if(argc == 1) sprintf(output, "void msg");
-			else sprintf(output, "%s\n" , argv[1]);
+			sprintf(output, "success\n");
 			break;
 	}
 	
@@ -263,7 +291,7 @@ static void cmdgetmsg(int argc, char *argv[], char * output, int format)
 static void v(int argc, char *argv[], char * output, int format)
 {
 	int mainversion = 0;
-	int subversion = 3;
+	int subversion = 4;
 
 	switch(format)
 	{
@@ -283,12 +311,11 @@ static struct cmd_line cmd_list[] = {
 	{"s", cmdsend},
 	{"t", tcpsend},
 	{"u", udpsend},
-	{"wb", wb},
-	{"wt", wt},
-	{"wu", wu},
+	{"wb", webbroadcast},
+	{"wt", webtcpsend},
+	{"wu", webudpsend},
 	{"b", broadcast},
-	{"v", v},
-	{"example", example}
+	{"v", v}
 };
 
 //=================================================================================================

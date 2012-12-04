@@ -171,7 +171,7 @@ function draw(){
 	$('#chart').empty();
 
     var plot1 = $.jqplot('chart', results[$("#draw-result").val()][$("#draw-machine").val()][$("#draw-disk").val()], {
-        title: 'Machine '+$("#draw-machine").val()+' Disk '+$("#draw-disk").val(),
+        title: 'Machine '+$("#draw-machine").val()+' Disk '+$("#draw-disk").val()+' - '+$("#draw-result option:selected").text(),
     });
 }
 

@@ -4,31 +4,44 @@
 
 sync_myuserid = 0;
 
+function checkTime(i)
+{
+if (i<10) 
+  {i="0" + i}
+  return i
+}
+function update(){
+	var today=new Date()
+	var h=today.getHours()
+	var m=today.getMinutes()
+	s=today.getSeconds()
+	m=checkTime(m)
+	s=checkTime(s)
+	$('#update').html(h+":"+m+":"+s);
+}
 function sync(){
 	do_cmd("g "+sync_myuserid, function(json,status){
+		update();
 		if(json.type == "new"){
 				sync_myuserid = json.id;
 				sync();
 		}else if(json.type == "msg"){
 				if(json.msg.type == "machine"){
-					$('#machine-'+json.msg.id+'-ip').empty();
-					$('#machine-'+json.msg.id+'-ip').append(json.msg.ip+':'+json.msg.port);
-					$('#machine-'+json.msg.id+'-status').empty();
+					$('#machine-'+json.msg.id+'-ip').html(json.msg.ip+':'+json.msg.port);
 					if(json.msg.status == 0){
-						$('#machine-'+json.msg.id+'-status').append('inactive');
+						$('#machine-'+json.msg.id+'-status').html('inactive');
 						$('#machine-'+json.msg.id+'-status').css("color", "black");
 					}else {
-						$('#machine-'+json.msg.id+'-status').append('active');
+						$('#machine-'+json.msg.id+'-status').html('active');
 						$('#machine-'+json.msg.id+'-status').css("color", "red");
 					}
 					
 					for(var i=0; i < 16 ; i++){
-						$('#disk-'+json.msg.id+'-'+i).empty();
 						if(json.msg.disks[i].status == 0){
-							$('#disk-'+json.msg.id+'-'+i).append('inactive');
+							$('#disk-'+json.msg.id+'-'+i).html('inactive');
 							$('#disk-'+json.msg.id+'-'+i).css("color", "black");
 						}else {
-							$('#disk-'+json.msg.id+'-'+i).append(json.msg.disks[i].capacity+' GB');
+							$('#disk-'+json.msg.id+'-'+i).html(json.msg.disks[i].capacity+' GB');
 							$('#disk-'+json.msg.id+'-'+i).css("color", "red");
 						}
 					}
