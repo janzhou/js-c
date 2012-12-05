@@ -1,14 +1,13 @@
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
+#include <windows.h>
 #include <process.h>
 #pragma comment(lib, "Ws2_32.lib")
 #endif
 
 #ifdef __linux
-#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <pthread.h>
-#include <unistd.h>/*close*/
 #endif
 
 #ifdef _WIN32

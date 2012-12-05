@@ -39,7 +39,6 @@ thread_func_t heartbeat_th(thread_arg_t arg){
 
 int main(int argc, char *argv[])
 {
-	char * msg;
 	port = 6000;
 	if(argc > 1) port = atoi(argv[1]);
 

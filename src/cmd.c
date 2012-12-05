@@ -27,7 +27,7 @@ static void v(int argc, char *argv[], char * output, int format)
 	switch(format)
 	{
 		case JSON:
-			sprintf(output, "\"v\":%d.%d.%d" , mainversion, subversion);
+			sprintf(output, "\"v\":%d.%d" , mainversion, subversion);
 			break;
 		case PRINT:
 			sprintf(output, "version: %d.%d.%d\n" , mainversion, subversion, develop);

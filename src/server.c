@@ -12,7 +12,6 @@ int server_bind(int port, int num, void (*callback)(char * ip, int port, int soc
 int server_send(char * ip, int port, void *buf ,int len, int type)
 {
 	int id;
-	char * msg = buf;
 
 	switch(type){
 		case TCP_SEND:
