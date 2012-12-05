@@ -1,23 +1,9 @@
-#ifdef _WIN32
-#define _CRT_SECURE_NO_WARNINGS
-#include <winsock2.h>
-#include <windows.h>
-#include <process.h>
-#pragma comment(lib, "Ws2_32.lib")
-#endif
-
-#ifdef __linux
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <pthread.h>
-#include <unistd.h>/*close*/
-#endif
-
 #include <malloc.h>
 #include <string.h> 
 #include <stdio.h>
 
 #include "tcp.h"
+#include "thread.h"
 
 //======================================================================================
 //======================receive and send=====================================================
@@ -42,24 +28,12 @@ typedef struct sock_list{
 	void * callbackdata;
 	struct sock_list * next;
 
-	#ifdef _WIN32
-	HANDLE tid;
-	#endif
-
-	#ifdef __linux
-	pthread_t tid;
-	#endif
+	thread_t tid;
 }sock_list;
 
 sock_list * sock_head = NULL;
 
-#ifdef _WIN32
-DWORD WINAPI receive_th(LPVOID arg)
-#endif
-#ifdef __linux
-static void * receive_th(void * arg)
-#endif
-{
+thread_func_t receive_th(thread_arg_t arg){
 	sock_list * p_sock = (sock_list *)arg;
 	char receiveBuf[SOCK_BUF_LEN];
 	int len = 0;
@@ -106,9 +80,7 @@ int tcp_connect(char * addr, int port, void (* callback)(int,int,void *,int,void
 	if(!connect(new_sock->sock_id, (struct sockaddr *) &sin, sizeof(sin))){
 		new_sock->callback = callback;
 		new_sock->callbackdata = callbackdata;
-		if(new_sock->sock_id > 2 && callback && 
-			((new_sock->tid=CreateThread(NULL, 0, receive_th, new_sock, 0, NULL))==NULL))
-		{
+		if(new_sock->sock_id > 2 && callback && create_thread(&new_sock->tid, receive_th, new_sock)){
 			printf("tcp error create thread\n");
 			closesocket(new_sock->sock_id);
 			goto connect_error;
@@ -139,7 +111,7 @@ int tcp_connect(char * addr, int port, void (* callback)(int,int,void *,int,void
 	if(!connect(new_sock->sock_id, (struct sockaddr *) &sin, sizeof(sin))){
 		new_sock->callback = callback;
 		new_sock->callbackdata = callbackdata;
-		if(new_sock->sock_id > 2 && callback && pthread_create(&new_sock->tid, NULL, receive_th, new_sock)){
+		if(new_sock->sock_id > 2 && callback && create_thread(&new_sock->tid, receive_th, new_sock)){
 			printf("tcp error create thread\n");
 			close(new_sock->sock_id);
 			goto connect_error;
@@ -202,13 +174,7 @@ struct accept_arg{
 	int socketfd;
 	struct sv_callback cb;
 
-	#ifdef _WIN32
-	HANDLE thread;
-	#endif
-
-	#ifdef __linux
-	pthread_t thread;
-	#endif
+	thread_t thread;
 };
 
 struct server_arg{
@@ -217,24 +183,11 @@ struct server_arg{
 	char ip[24];
 	int port;
 
-	#ifdef _WIN32
-	HANDLE thread;
-	#endif
-
-	#ifdef __linux
-	pthread_t thread;
-	#endif
+	thread_t thread;
 };
 
 
-#ifdef _WIN32
-static DWORD WINAPI server_th(LPVOID arg)
-#endif
-
-#ifdef __linux
-static void * server_th(void * arg)
-#endif
-{
+thread_func_t server_th(thread_arg_t arg){
 	struct server_arg * s_arg =(struct server_arg *) arg;
 	if(s_arg->cb.callback){
 		char receiveBuf[SOCK_BUF_LEN];
@@ -258,15 +211,7 @@ static void * server_th(void * arg)
 	return 0;
 }
 
-
-#ifdef _WIN32
-DWORD WINAPI server_accept_th(LPVOID arg)
-#endif
-
-#ifdef __linux
-static void * server_accept_th(void * arg)
-#endif
-{
+thread_func_t server_accept_th(thread_arg_t arg){ {
 	struct accept_arg * ac_arg = (struct accept_arg *)arg;
 	struct sockaddr_in clientAdd;
 	int  len = sizeof(struct sockaddr_in);
@@ -278,18 +223,9 @@ static void * server_accept_th(void * arg)
 		strcpy(s_arg->ip, inet_ntoa(clientAdd.sin_addr)); 
 		s_arg->port = clientAdd.sin_port;
 
-		#ifdef _WIN32
-		if((s_arg->thread = CreateThread(NULL, 0, server_th, s_arg, 0, NULL))==NULL)
-		{
+		if(create_thread(&s_arg->thread,server_th,s_arg)){
 			free(s_arg);
 		}
-		#endif
-
-		#ifdef __linux
-		if(pthread_create(&s_arg->thread,NULL,server_th,s_arg)){
-			free(s_arg);
-		}
-		#endif
 	}
 	return 0;
 }
@@ -298,22 +234,22 @@ int tcp_server_bind(int port, int num, void (*callback)(char * ip, int port, int
 {
 	struct accept_arg * ac_arg = (struct accept_arg*)malloc(sizeof(struct accept_arg));
 
-	#ifdef _WIN32
+#ifdef _WIN32
 	struct sockaddr_in saAddr;
 
 	WORD wVersionRequested;
-    WSADATA wsaData;
+	WSADATA wsaData;
 	int err;
 	wVersionRequested = MAKEWORD(2, 2);
-	
+
 	err = WSAStartup(wVersionRequested, &wsaData);
-    if (err != 0) {
-        /* Tell the user that we could not find a usable */
-        /* Winsock DLL.                                  */
-        printf("WSAStartup failed with error: %d\n", err);
-        return 1;
-    }
-	#endif
+	if (err != 0) {
+		/* Tell the user that we could not find a usable */
+		/* Winsock DLL.                                  */
+		printf("WSAStartup failed with error: %d\n", err);
+		return 1;
+	}
+#endif
 
 	ac_arg->cb.callback = callback;
 	ac_arg->cb.callbackdata= callbackdata;
@@ -324,7 +260,7 @@ int tcp_server_bind(int port, int num, void (*callback)(char * ip, int port, int
 		goto bind_error;
 	}
 
-	#ifdef _WIN32
+#ifdef _WIN32
 	memset(&saAddr,0,sizeof(saAddr));
 	saAddr.sin_family = AF_INET;
 	saAddr.sin_port = htons((unsigned short)port);
@@ -338,9 +274,8 @@ int tcp_server_bind(int port, int num, void (*callback)(char * ip, int port, int
 	if(listen(ac_arg->socketfd,num )!=0){
 		goto bind_error;
 	}
-	
-	if((ac_arg->thread = CreateThread(NULL, 0, server_accept_th, ac_arg, 0, NULL))==NULL)
-	{
+
+	if(create_thread(&ac_arg->thread,server_accept_th,ac_arg)){
 		goto bind_error;
 	}
 
@@ -349,9 +284,9 @@ bind_error:
 	free(ac_arg);
 	return -1;
 
-	#endif
+#endif
 
-	#ifdef __linux
+#ifdef __linux
 	struct sockaddr_in sa ;
 	memset(&sa,0,sizeof(sa));
 	sa.sin_family = AF_INET;
@@ -366,8 +301,8 @@ bind_error:
 	if(listen(ac_arg->socketfd,num )!=0){
 		goto bind_error;
 	}
-	
-	if(pthread_create(&ac_arg->thread,NULL,server_accept_th,ac_arg)){
+
+	if(create_thread(&ac_arg->thread,server_accept_th,ac_arg)){
 		goto bind_error;
 	}
 
@@ -375,5 +310,5 @@ bind_error:
 bind_error:
 	free(ac_arg);
 	return -1;
-	#endif
+#endif
 }

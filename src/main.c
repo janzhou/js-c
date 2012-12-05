@@ -1,8 +1,18 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <winsock2.h>
-#include <windows.h>
-#include <process.h>
-#pragma comment(lib, "Ws2_32.lib")
+//#ifdef _WIN32
+//#define _CRT_SECURE_NO_WARNINGS
+//#include <winsock2.h>
+//#include <windows.h>
+//#include <process.h>
+//#pragma comment(lib, "Ws2_32.lib")
+//#endif
+//
+//#ifdef __linux
+//#include <sys/socket.h>
+//#include <arpa/inet.h>
+//#include <pthread.h>
+//#include <unistd.h>/*close*/
+//#endif
+
 
 #include <stdio.h>
 #include <string.h>
@@ -14,12 +24,14 @@
 #include"cmd.h"
 #include"ui.h"
 #include"user.h"
+#include"thread.h"
 
-HANDLE heartbeat_tid;
+thread_t heartbeat_tid;
 
-static DWORD WINAPI heartbeat_th(LPVOID arg){
+thread_func_t heartbeat_th(thread_arg_t arg){
+	arg = arg;
 	while(1){
-		Sleep(1000);
+		thread_sleep(1000);
 		uiheartbeat();
 		userheartbeat();
 	}
@@ -37,7 +49,7 @@ int main(int argc, char *argv[])
 	server_bind(port, 20, do_ui, NULL);
 	tcp_server_bind(2012, 20, do_cmd_tcp, NULL);
 
-	heartbeat_tid=CreateThread(NULL, 0, heartbeat_th, NULL, 0, NULL);
+	create_thread(&heartbeat_tid, heartbeat_th, NULL);
 
 	do_cmd_stdin();
 

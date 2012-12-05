@@ -70,7 +70,7 @@ void do_ui(char * ip, int port, int sock_id, int event, void * buf, int len, voi
 		case UDP_DATAREADY:
 
 			printtextresult(msg, buf);
-			sendmsg(msg);
+			sendwebmsg(msg);
 
 			//machine
 			if((find = strstr(buf,"machine= worker "))!=NULL){
@@ -100,7 +100,7 @@ void do_ui(char * ip, int port, int sock_id, int event, void * buf, int len, voi
 					}
 
 					printmachine(msg, machines+machine);
-					sendmsg(msg);
+					sendwebmsg(msg);
 				}else if((find = strstr(buf,"Section=IOMeter"))!=NULL){//iometer
 					result.type = IOMETER;
 					result.progress = 0;
@@ -118,7 +118,7 @@ void do_ui(char * ip, int port, int sock_id, int event, void * buf, int len, voi
 					result.disk = disk;
 
 					printresult(msg, &result);
-					sendmsg(msg);
+					sendwebmsg(msg);
 
 				}else if((find = strstr(buf,"section=bit"))!=NULL){//bit
 					result.type = BIT;
@@ -151,7 +151,7 @@ void do_ui(char * ip, int port, int sock_id, int event, void * buf, int len, voi
 					result.disk = disk;
 
 					printresult(msg, &result);
-					sendmsg(msg);
+					sendwebmsg(msg);
 				}else if((find = strstr(buf,"Section=IOMeter_Result"))!=NULL){//bit
 					result.type = IOMeter_Result;
 					result.progress = 0;
@@ -175,7 +175,7 @@ void do_ui(char * ip, int port, int sock_id, int event, void * buf, int len, voi
 					result.disk = disk;
 
 					printresult(msg, &result);
-					sendmsg(msg);
+					sendwebmsg(msg);
 				}
 
 			}else{//没有port字段，为machine信息
@@ -183,7 +183,7 @@ void do_ui(char * ip, int port, int sock_id, int event, void * buf, int len, voi
 					strcpy(machines[machine].ip, ip);
 					machines[machine].status = 1;
 					printmachine(msg, machines+machine);
-					sendmsg(msg);
+					sendwebmsg(msg);
 				}else{//machine inactive 如何判断?
 				//	machines[machine].status = 0;
 				}

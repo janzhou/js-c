@@ -1,15 +1,11 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <winsock2.h>
-#include <windows.h>
-#include <process.h>
-#pragma comment(lib, "Ws2_32.lib")
-
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h> 
 
 #include "udp.h"
+#include "thread.h"
 
+#ifdef _WIN32
 static int udp_startup(){
 	static int running = 0;
 	WSADATA wsaData;
@@ -25,6 +21,7 @@ static int udp_startup(){
 	 running = 1;
 	 return 0;
 }
+#endif
 
 int udp_send(char * ip, int port, void *buf ,int len)
 {
@@ -219,5 +216,3 @@ int udp_server_bind(int port, int num, void (*callback)(char * ip, int port, int
 
 	return 0;
 }
-
-

@@ -246,7 +246,7 @@ static void cmdsend(int argc, char *argv[], char * output, int format)
 	if(argc == 1) sprintf(msg, "\"void msg\"");
 	else sprintf(msg, "\"%s\"" , argv[1]);
 	
-	sendmsg(msg);
+	sendwebmsg(msg);
 
 
 	switch(format)
@@ -275,7 +275,7 @@ static void chat(int argc, char *argv[], char * output, int format)
 		sprintf(msg, "{\"type\":\"chat\",\"msg\":\"%s\"}" , convertbuf);
 	}
 	
-	sendmsg(msg);
+	sendwebmsg(msg);
 
 	switch(format)
 	{
