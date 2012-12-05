@@ -8,6 +8,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+#pragma comment(lib,"libmysql.lib")
+#include <mysql.h>
+
 #include"global.h"
 #include"server.h"
 #include"tcp.h"
@@ -24,13 +27,50 @@ static DWORD WINAPI heartbeat_th(LPVOID arg){
 		userheartbeat();
 	}
 }
+int mysql_test(void)
+{
+	//connection params
+	//FILE *file;
+	char *host = "127.0.0.1";
+	char *user = "root";
+	char *pass = "123456";
+	char *db = "host";
+	int res;
+	//sock
+	MYSQL sock;
+	MYSQL_RES *results;
+	MYSQL_ROW record;
+	mysql_init(&sock);
 
+	//connection
+	if (mysql_real_connect(&sock, host, user, pass, db, 0, NULL, 0)){
+		printf("connection ok!");
+		
+		res=mysql_query(&sock,"insert into hostview values(50,'ggjhg',6,'dsdd','dsadd','dasdh',123,'dsadf',12,23,'dadd',123);");
+		if(!res){
+			printf("succs");
+		} else{
+			printf("insert fail\n");
+		}
+
+	} else {
+		printf("connection fail: ");
+	}
+
+	printf("succeed");
+
+
+	mysql_close(&sock);
+
+	return EXIT_SUCCESS;
+
+}
 int main(int argc, char *argv[])
 {
 	char * msg;
 	port = 6000;
 	if(argc > 1) port = atoi(argv[1]);
-
+	mysql_test();
 	uiinit();
 	userinit();
 

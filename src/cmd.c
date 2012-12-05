@@ -22,7 +22,7 @@ static void v(int argc, char *argv[], char * output, int format)
 {
 	int mainversion = 0;
 	int subversion = 6;
-	int develop = 0;
+	int develop = 1;
 
 	switch(format)
 	{
