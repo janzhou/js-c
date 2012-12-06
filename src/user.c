@@ -29,7 +29,7 @@ void userinit(void)
 	return;
 }
 
-void sendmsg(char * msg)
+void sendwebmsg(char * msg)
 {
 	struct user_t * user;
 	struct buffer_t * buffer;
@@ -59,7 +59,7 @@ void sendmsg(char * msg)
 	v(usersem);
 }
 
-char * getmsg(int user_id){
+char * getwebmsg(int user_id){
 	struct user_t * user;
 	struct buffer_t * buffer;
 

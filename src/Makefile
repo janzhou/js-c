@@ -3,7 +3,7 @@ LIBS		= -pthread
 
 all: main
 
-main: main.o cmd.o convert.c sem.c server.c tcp.c udp.c ui.c user.c
+main: main.o cmd.o convert.c sem.c server.c tcp.c udp.c ui.c user.c thread.c
 	cc $(CFLAGS) -o $@ $^ $(LIBS)
 
 %.o: %.c

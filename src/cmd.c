@@ -300,7 +300,7 @@ static void cmdgetmsg(int argc, char *argv[], char * output, int format)
 	if(argc == 1) id = 0;
 	else id = atoi(argv[1]);
 
-	msg = getmsg(id);
+	msg = getwebmsg(id);
 	sprintf(output, "%s" , msg);
 
 	free(msg);

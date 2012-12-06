@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "ui.h"
+#include "user.h"
 #include "server.h"
 #include "convert.h"
 
@@ -16,7 +17,6 @@ void printmachine(char * buf, struct machine_t * machine){
 }
 
 void printresult(char * buf, struct result_t * result){
-	int i = 0;
 	switch(result->type){
 		case IOMETER:
 			sprintf(buf, "{\"type\":\"result\",\"test\":\"iometer\",\"machine\":\"%d\",\"disk\":\"%d\",\"progress\":%f,\"iops\":%f}", result->machine, result->disk, result->progress, result->iops);
@@ -33,7 +33,6 @@ void printresult(char * buf, struct result_t * result){
 
 
 void printtextresult(char * buf, char * text){
-	int i = 0;
 	char convertbuf[800];
 	stringtohtml(text, convertbuf, sizeof(convertbuf));
 	sprintf(buf, "{\"type\":\"textresult\",\"text\":\"%s\"}", convertbuf);

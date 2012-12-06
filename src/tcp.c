@@ -194,7 +194,7 @@ struct server_arg{
 };
 
 
-thread_func_t server_th(thread_arg_t arg){
+static thread_func_t server_th(thread_arg_t arg) {
     struct server_arg * s_arg =(struct server_arg *) arg;
     if(s_arg->cb.callback){
         char receiveBuf[SOCK_BUF_LEN];
