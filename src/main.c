@@ -23,6 +23,10 @@
 #include <mysql.h>
 #endif
 
+#ifdef __linux
+#include "../mysql/linux-x86-32bit/include/mysql.h"
+#endif
+
 #include"global.h"
 #include"server.h"
 #include"tcp.h"
@@ -42,10 +46,7 @@ thread_func_t heartbeat_th(thread_arg_t arg){
 	}
 }
 
-
-#ifdef _WIN32
-int mysql_test(void)
-{
+int mysql_test(void) {
 	//connection params
 	//FILE *file;
 	char *host = "127.0.0.1";
@@ -82,15 +83,11 @@ int mysql_test(void)
 	return EXIT_SUCCESS;
 
 }
-#endif
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 	port = 6000;
 	if(argc > 1) port = atoi(argv[1]);
-#ifdef _WIN32
 	mysql_test();
-#endif
 	uiinit();
 	userinit();
 
