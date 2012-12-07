@@ -42,7 +42,7 @@ int udp_receive(int sock_id,void *buf, int len) {
 	struct sockaddr_in fromAddr;
 	unsigned int fromLen;
 	fromLen = sizeof(fromAddr);
-	if(recvfrom(sock_id, buf, len, 0, (struct sockaddr*)&fromAddr,&fromLen)<0) {
+	if(recvfrom(sock_id, buf, len, 0, (struct sockaddr*)&fromAddr,&fromLen) < 0) {
 		printf("udp receive error\n");
 		return -1;
 	}
@@ -50,58 +50,80 @@ int udp_receive(int sock_id,void *buf, int len) {
 }
 
 int udp_broadcast(int port, void *buf ,int len){
-//	WORD wVersionRequested;  
-//	WSADATA wsaData;  
-//	int err;  
-//	SOCKET connect_socket;
-//	SOCKADDR_IN sin; 
-//	char bOpt;
-//	int nAddrLen;
-//	int nSendSize;
-//
-//	// 启动socket api   
-//	wVersionRequested = MAKEWORD( 2, 2 );  
-//	err = WSAStartup( wVersionRequested, &wsaData );  
-//	if ( err != 0 )  
-//	{  
-//		return -1;  
-//	}  
-//
-//	if ( LOBYTE( wsaData.wVersion ) != 2 ||  
-//			HIBYTE( wsaData.wVersion ) != 2 )  
-//	{  
-//		WSACleanup( );  
-//		return -1;   
-//	}  
-//
-//	// 创建socket
-//	connect_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);  
-//	if(INVALID_SOCKET == connect_socket)  
-//	{  
-//		err = WSAGetLastError();  
-//		printf("\"socket\" error! error code is %d\n", err);  
-//		return -1;  
-//	}
-//
-//	sin.sin_family = AF_INET;  
-//	sin.sin_port = htons(port);  
-//	sin.sin_addr.s_addr = INADDR_BROADCAST;  
-//
-//
-//	//设置该套接字为广播类型   
-//	bOpt = -1;
-//	setsockopt(connect_socket, SOL_SOCKET, SO_BROADCAST, (char*)&bOpt, sizeof(bOpt));  
-//
-//	nAddrLen = sizeof(SOCKADDR);  
-//
-//	// 发送数据   
-//	nSendSize = sendto(connect_socket, (char*)buf, len, 0, (SOCKADDR*)&sin, nAddrLen);  
-//	if(SOCKET_ERROR == nSendSize)  
-//	{  
-//		err = WSAGetLastError();  
-//		printf("\"sendto\" error!, error code is %d\n", err);  
-//		return -1;  
-//	}  
+	int inet_sock, so_broadcast = 1;
+	struct sockaddr_in adr_bc;
+	if ((inet_sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+		perror("Broadcast UDP created socket error");
+		return -1;
+	}
+	if (setsockopt(inet_sock, SOL_SOCKET, SO_BROADCAST, &so_broadcast, sizeof so_broadcast) < 0) {
+		perror("Broadcast UDP set socket error");
+		close(inet_sock);
+		return -1;
+	}
+
+	adr_bc.sin_family = AF_INET;
+	adr_bc.sin_port = htons(port);
+	adr_bc.sin_addr.s_addr = inet_addr("255.255.255.255");
+	if (sendto(inet_sock, buf, len, 0, (struct sockaddr *)&adr_bc, sizeof adr_bc)< 0) {
+		perror("Broadcast send error");
+		close(inet_sock);
+		return -1;
+	}
+	close(inet_sock);
+	return 0;
+	//	WORD wVersionRequested;  
+	//	WSADATA wsaData;  
+	//	int err;  
+	//	SOCKET connect_socket;
+	//	SOCKADDR_IN sin; 
+	//	char bOpt;
+	//	int nAddrLen;
+	//	int nSendSize;
+	//
+	//	// 启动socket api   
+	//	wVersionRequested = MAKEWORD( 2, 2 );  
+	//	err = WSAStartup( wVersionRequested, &wsaData );  
+	//	if ( err != 0 )  
+	//	{  
+	//		return -1;  
+	//	}  
+	//
+	//	if ( LOBYTE( wsaData.wVersion ) != 2 ||  
+	//			HIBYTE( wsaData.wVersion ) != 2 )  
+	//	{  
+	//		WSACleanup( );  
+	//		return -1;   
+	//	}  
+	//
+	//	// 创建socket
+	//	connect_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);  
+	//	if(INVALID_SOCKET == connect_socket)  
+	//	{  
+	//		err = WSAGetLastError();  
+	//		printf("\"socket\" error! error code is %d\n", err);  
+	//		return -1;  
+	//	}
+	//
+	//	sin.sin_family = AF_INET;  
+	//	sin.sin_port = htons(port);  
+	//	sin.sin_addr.s_addr = INADDR_BROADCAST;  
+	//
+	//
+	//	//设置该套接字为广播类型   
+	//	bOpt = -1;
+	//	setsockopt(connect_socket, SOL_SOCKET, SO_BROADCAST, (char*)&bOpt, sizeof(bOpt));  
+	//
+	//	nAddrLen = sizeof(SOCKADDR);  
+	//
+	//	// 发送数据   
+	//	nSendSize = sendto(connect_socket, (char*)buf, len, 0, (SOCKADDR*)&sin, nAddrLen);  
+	//	if(SOCKET_ERROR == nSendSize)  
+	//	{  
+	//		err = WSAGetLastError();  
+	//		printf("\"sendto\" error!, error code is %d\n", err);  
+	//		return -1;  
+	//	}  
 
 
 	return 0;  
@@ -130,15 +152,16 @@ static thread_func_t server_th(thread_arg_t arg)
 	fromlen = sizeof(from);
 
 	s_arg =(struct server_arg *) arg;
-
 	if(s_arg->cb.callback){
 		char receiveBuf[SOCK_BUF_LEN];
 		int len;
 
 		while( 1 ){
-			if((len = recvfrom(s_arg->socket, receiveBuf, SOCK_BUF_LEN, 0, (struct sockaddr*)&from, (socklen_t*)&fromlen)) < 0){
+			if((len = recvfrom(s_arg->socket, receiveBuf, SOCK_BUF_LEN, 0, (struct sockaddr*)&from, (socklen_t*)&fromlen)) > 0){
 				receiveBuf[len]=0;
 				(*s_arg->cb.callback)(inet_ntoa(from.sin_addr), from.sin_port, s_arg->clientfd, UDP_DATAREADY, receiveBuf, len, s_arg->cb.callbackdata);
+			} else {
+				printf("udp receive error %d %d\n", s_arg->socket, len);
 			}
 		}
 
@@ -163,7 +186,9 @@ int udp_server_bind(int port, int num, void (*callback)(char * ip, int port, int
 	local.sin_addr.s_addr=INADDR_ANY; ///本机
 
 	arg->socket=socket(AF_INET,SOCK_DGRAM,0);
-	bind(arg->socket, (struct sockaddr*)&local, sizeof(local));
+	if(-1 == bind(arg->socket, (struct sockaddr*)&local, sizeof(local))) {
+		printf("udp bind error\n");
+	}
 
 	if( create_thread(&arg->thread, server_th, arg) ) {
 		close(arg->socket);

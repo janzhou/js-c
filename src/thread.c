@@ -11,6 +11,7 @@ void thread_sleep(int time){
 #endif
 
 #ifdef __linux
+#include <unistd.h> //sleep
 int create_thread(thread_t * ptid, thread_func_t (* func)(thread_arg_t arg), thread_arg_t arg){
 	return pthread_create(ptid, NULL, func, arg);
 }
