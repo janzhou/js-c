@@ -24,7 +24,7 @@
 #endif
 
 #ifdef __linux
-#include "../mysql/linux-x86-32bit/include/mysql.h"
+#include "../mysql/linux/include/mysql.h"
 #endif
 
 #include"global.h"
