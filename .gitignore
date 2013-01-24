@@ -1,3 +1,4 @@
 *.o
 *~
 src/main
+mysql/linux
