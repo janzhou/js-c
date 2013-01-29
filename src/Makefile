@@ -1,3 +1,5 @@
+# Distributed under the terms of the GNU General Public License v2
+
 CFLAGS	= -Wall -W -O2 -g
 LIBS		= -pthread -L../mysql/linux/lib/ -lmysqlclient
 all: main

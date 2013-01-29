@@ -1,3 +1,5 @@
+// Distributed under the terms of the GNU General Public License v2
+
 #ifndef _H_TCP_
 #define _H_TCP_
 

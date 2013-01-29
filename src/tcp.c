@@ -1,3 +1,5 @@
+// Distributed under the terms of the GNU General Public License v2
+
 #ifdef _WIN32
 #include <winsock2.h>
 #endif

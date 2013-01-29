@@ -1,3 +1,5 @@
+// Distributed under the terms of the GNU General Public License v2
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <string.h>
 #include <stdlib.h>

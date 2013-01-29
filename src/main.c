@@ -1,3 +1,5 @@
+// Distributed under the terms of the GNU General Public License v2
+
 //#ifdef _WIN32
 //#define _CRT_SECURE_NO_WARNINGS
 //#include <winsock2.h>

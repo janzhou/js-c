@@ -1,3 +1,5 @@
+Distributed under the terms of the GNU General Public License v2
+
 #Introduction
 
 This is a C and Js connector.
